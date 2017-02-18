@@ -1,5 +1,7 @@
 'use strict';
 import * as firebase from "firebase";
+import PubSub from './../internals/pubsub';
+
 const Emitter = require('events');
 
 export default class FirebaseController extends Emitter {
@@ -12,7 +14,6 @@ export default class FirebaseController extends Emitter {
       databaseURL: "https://reeflight-fb71e.firebaseio.com"
     };
     firebase.initializeApp(config);
-    this.emit('firebase-ready');
+    PubSub.publish('firebase.ready', true);
   }
-
 };
