@@ -1,23 +1,23 @@
 'use strict';
 import FirebaseController from './firebase-controller.js';
 import I2cController from './i2c-controller.js';
-import PubSub from './../internals/pubsub';
+import PubSubLoader from './../internals/pub-sub-loader.js';
+
+const i2c = new I2cController();
+PubSubLoader();
 
 export default class extends FirebaseController {
   constructor() {
     super();
-    this.onFirebaseReady = this.onFirebaseReady.bind(this);
-    PubSub.subscribe('firebase.ready', this.onFirebaseReady);
-    
+    this.start();
   }
-  onFirebaseReady() {
-   this.start(); 
-  } 
+  get firebase() {
+    return global.firebase;
+  }
   start() {
-    firebase.database().ref('users/XpsE3FKDooeYDJwkxES9JLG8BPZ2/channel').on('value', snapshot => {
-      const data = snapshot.val();
-      I2cController(data);
+    this.firebase.database().ref('users/XpsE3FKDooeYDJwkxES9JLG8BPZ2/channel/').on('value', snapshot => {
+          const data = snapshot.val();
+          i2c.write(data);
     });
   }
-
 };

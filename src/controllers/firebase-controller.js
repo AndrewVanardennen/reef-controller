@@ -1,12 +1,9 @@
 'use strict';
 import * as firebase from "firebase";
-import PubSub from './../internals/pubsub';
-
-const Emitter = require('events');
-
-export default class FirebaseController extends Emitter {
+import PubSubLoader from './../internals/pub-sub-loader.js';
+PubSubLoader();
+export default class FirebaseController {
   constructor() {
-    super();
     // Initialize Firebase
     const config = {
       apiKey: "AIzaSyCxBWJTjZ822a_0bxGbTJV3F1dZoQVFo1w",
@@ -14,6 +11,7 @@ export default class FirebaseController extends Emitter {
       databaseURL: "https://reeflight-fb71e.firebaseio.com"
     };
     firebase.initializeApp(config);
-    PubSub.publish('firebase.ready', true);
+    global.firebase = firebase;
   }
+
 };
